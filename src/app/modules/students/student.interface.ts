@@ -1,4 +1,4 @@
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 
 export type TUserName = {
   firstName: string;
@@ -15,8 +15,7 @@ export type TParent = {
 };
 
 export type TStudent = {
-  id: string;
-  password: string;
+  user: Types.ObjectId;
   name: TUserName;
   email: string;
   avatar: string;
@@ -24,21 +23,7 @@ export type TStudent = {
   dateOfBirth?: string;
   bloodGroup?: 'A+' | 'A-' | 'B+' | 'B-' | 'AB+' | 'AB-' | 'O+' | 'O-';
   parent: TParent;
-  isActive: 'Active' | 'Blocked';
-  isDeleted: boolean;
 };
-
-// for creating instance method
-
-// export type StudentMethods = {
-//   isUserExist(id: string): Promise<TStudent | null>;
-// };
-
-// export type StudentModel = Model<
-//   TStudent,
-//   Record<string, never>,
-//   StudentMethods
-// >;
 
 // for creating static method
 

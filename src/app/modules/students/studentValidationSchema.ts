@@ -46,25 +46,26 @@ const parentValidationSchema = z.object({
 });
 
 // Student Schema
-const studentValidationSchema = z.object({
-  id: z.string().min(1, { message: 'id is required' }),
-  password: z.string().min(1, { message: 'password is required' }),
-  name: nameValidationSchema,
-  gender: z.enum(['male', 'female', 'other'], {
-    errorMap: () => ({ message: '{VALUE} is not valid' }),
+const createStudentValidationSchema = z.object({
+  body: z.object({
+    password: z.string().min(1, { message: 'password is required' }),
+    student: z.object({
+      name: nameValidationSchema,
+      gender: z.enum(['male', 'female', 'other'], {
+        errorMap: () => ({ message: '{VALUE} is not valid' }),
+      }),
+      email: z
+        .string()
+        .email({ message: '{VALUE} is not a valid email' })
+        .min(1, { message: 'Email is required' }),
+      avatar: z.string().min(1, { message: 'avatar is required' }),
+      dateOfBirth: z.string().optional(),
+      bloodGroup: z
+        .enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'])
+        .optional(),
+      parent: parentValidationSchema,
+    }),
   }),
-  email: z
-    .string()
-    .email({ message: '{VALUE} is not a valid email' })
-    .min(1, { message: 'Email is required' }),
-  avatar: z.string().min(1, { message: 'avatar is required' }),
-  dateOfBirth: z.string().optional(),
-  bloodGroup: z
-    .enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'])
-    .optional(),
-  parent: parentValidationSchema,
-  isActive: z.enum(['Active', 'Blocked']).default('Active'),
-  isDeleted: z.boolean(),
 });
 
-export default studentValidationSchema;
+export default createStudentValidationSchema;
