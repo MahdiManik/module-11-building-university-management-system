@@ -1,71 +1,54 @@
 import { z } from 'zod';
-import validator from 'validator';
 
-// UserName Schema
-const nameValidationSchema = z.object({
+const userNameValidationSchema = z.object({
   firstName: z
     .string()
-    .min(1, { message: 'First name is required' })
-    .max(20, { message: 'First name must be at most 20 characters long' })
-    .trim()
-    .refine((value) => /^[A-Z][a-zA-Z]*$/.test(value), {
-      message: '{VALUE} is not capitalize format',
+    .min(1)
+    .max(20)
+    .refine((value) => /^[A-Z]/.test(value), {
+      message: 'First Name must start with a capital letter',
     }),
-
-  middleName: z
-    .string()
-    .max(20, { message: 'Middle name must be at most 20 characters long' })
-    .trim()
-    .optional(),
-  lastName: z
-    .string()
-    .min(1, { message: 'Last name is required' })
-    .max(20, { message: 'Last name must be at most 20 characters long' })
-    .trim()
-    .refine((value) => validator.isAlpha(value), {
-      message: '{VALUE} is not valid',
-    }),
+  middleName: z.string().optional(),
+  lastName: z.string(),
 });
 
-// Parent Schema
-const parentValidationSchema = z.object({
-  fatherName: z.string().min(1, { message: 'Father name is required' }),
-  fatherOccupation: z
-    .string()
-    .min(1, { message: 'Father Occupation is required' }),
-  fatherContactNo: z
-    .string()
-    .min(1, { message: 'Father contact no is required' }),
-  matherName: z.string().min(1, { message: 'Mother name is required' }),
-  matherOccupation: z
-    .string()
-    .min(1, { message: 'Mother occupation is required' }),
-  matherContactNo: z
-    .string()
-    .min(1, { message: 'Mother contact no is required' }),
+const guardianValidationSchema = z.object({
+  fatherName: z.string(),
+  fatherOccupation: z.string(),
+  fatherContactNo: z.string(),
+  motherName: z.string(),
+  motherOccupation: z.string(),
+  motherContactNo: z.string(),
 });
 
-// Student Schema
-const createStudentValidationSchema = z.object({
+const localGuardianValidationSchema = z.object({
+  name: z.string(),
+  occupation: z.string(),
+  contactNo: z.string(),
+  address: z.string(),
+});
+
+export const createStudentValidationSchema = z.object({
   body: z.object({
-    password: z.string().min(1, { message: 'password is required' }),
+    password: z.string().max(20),
     student: z.object({
-      name: nameValidationSchema,
-      gender: z.enum(['male', 'female', 'other'], {
-        errorMap: () => ({ message: '{VALUE} is not valid' }),
-      }),
-      email: z
-        .string()
-        .email({ message: '{VALUE} is not a valid email' })
-        .min(1, { message: 'Email is required' }),
-      avatar: z.string().min(1, { message: 'avatar is required' }),
+      name: userNameValidationSchema,
+      gender: z.enum(['male', 'female', 'other']),
       dateOfBirth: z.string().optional(),
-      bloodGroup: z
-        .enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'])
-        .optional(),
-      parent: parentValidationSchema,
+      email: z.string().email(),
+      contactNo: z.string(),
+      emergencyContactNo: z.string(),
+      bloodGroup: z.enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']),
+      presentAddress: z.string(),
+      permanentAddress: z.string(),
+      guardian: guardianValidationSchema,
+      localGuardian: localGuardianValidationSchema,
+      admissionSemester: z.string().optional(), // Optional if not always provided
+      profileImg: z.string().optional(), // Optional if not always provided
     }),
   }),
 });
 
-export default createStudentValidationSchema;
+export const studentValidations = {
+  createStudentValidationSchema,
+};
