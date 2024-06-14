@@ -8,7 +8,7 @@ const userNameValidationSchema = z.object({
     .refine((value) => /^[A-Z]/.test(value), {
       message: 'First Name must start with a capital letter',
     }),
-  middleName: z.string().optional(),
+  middleName: z.string(),
   lastName: z.string(),
 });
 
@@ -43,8 +43,8 @@ export const createStudentValidationSchema = z.object({
       permanentAddress: z.string(),
       guardian: guardianValidationSchema,
       localGuardian: localGuardianValidationSchema,
-      admissionSemester: z.string().optional(), // Optional if not always provided
-      profileImg: z.string().optional(), // Optional if not always provided
+      admissionSemester: z.string(),
+      profileImg: z.string(),
     }),
   }),
 });

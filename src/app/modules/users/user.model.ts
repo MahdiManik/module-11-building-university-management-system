@@ -1,35 +1,41 @@
+import bcrypt from 'bcrypt';
 import { Schema, model } from 'mongoose';
 import { TUser } from './user.interface';
 import config from '../../config';
-import bcrypt from 'bcrypt';
-import { NextFunction } from 'express';
 
-export const userSchema = new Schema({
-  id: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  password: {
-    type: String,
-  },
-  needPasswordChange: {
-    type: Boolean,
-  },
-  role: {
-    type: String,
-    enum: {
-      values: ['admin', 'student', 'faculty'],
+const userSchema = new Schema<TUser>(
+  {
+    id: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    password: {
+      type: String,
       required: true,
     },
+    needsPasswordChange: {
+      type: Boolean,
+      default: true,
+    },
+    role: {
+      type: String,
+      enum: ['student', 'faculty', 'admin'],
+    },
+    status: {
+      type: String,
+      enum: ['in-progress', 'blocked'],
+      default: 'in-progress',
+    },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
   },
-  isDeleted: {
-    type: Boolean,
-    default: false,
+  {
+    timestamps: true,
   },
-});
-
-// set bcrypt for password
+);
 
 userSchema.pre('save', async function (next) {
   // eslint-disable-next-line @typescript-eslint/no-this-alias
@@ -42,20 +48,10 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
-// set password is "" after save
-userSchema.post(
-  'save',
-  function (doc: { password: string }, next: NextFunction) {
-    doc.password = '';
-    next();
-  },
-);
-
-userSchema.pre('find', function (next: NextFunction) {
-  this.find({ isDeleted: { $ne: true } });
+// set '' after saving password
+userSchema.post('save', function (doc, next) {
+  doc.password = '';
   next();
 });
-
-// model
 
 export const User = model<TUser>('User', userSchema);

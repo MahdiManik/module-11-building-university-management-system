@@ -1,15 +1,12 @@
 import express from 'express';
-import { studentController } from './student.controllers';
+import { StudentControllers } from './student.controllers';
 
 const router = express.Router();
 
-// Read
-router.get('/', studentController.getAllStudents);
+router.get('/:semesterIdId', StudentControllers.getSingleStudent);
 
-// Read single data by id
-router.get('/:studentId', studentController.getSingleStudent);
+router.delete('/:semesterIdId', StudentControllers.deleteStudent);
 
-// Delete a single data by id
-router.delete('/:studentId', studentController.deleteStudent);
+router.get('/', StudentControllers.getAllStudents);
 
-export const studentRoutes = router;
+export const StudentRoutes = router;

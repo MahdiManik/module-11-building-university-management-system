@@ -1,47 +1,45 @@
-import { studentServices } from './student.services';
-import sendResponse from '../../config/utils/sendResponse';
 import httpStatus from 'http-status';
 import catchAsync from '../../config/utils/catchAsync';
+import sendResponse from '../../config/utils/sendResponse';
+import { StudentServices } from './student.services';
+import { RequestHandler } from 'express';
 
-// get all students data
-const getAllStudents = catchAsync(async (req, res) => {
-  const result = await studentServices.getAllStudentsFromDB();
-
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    massage: 'All students data showed successfully',
-    data: result,
-  });
-});
-
-// get single student data
 const getSingleStudent = catchAsync(async (req, res) => {
   const { studentId } = req.params;
-  const result = await studentServices.getSingleStudentFromDB(studentId);
+  const result = await StudentServices.getSingleStudentFromDB(studentId);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    massage: 'get a single student data',
+    massage: 'Student is retrieved success fully',
     data: result,
   });
 });
 
-// delete student data
+const getAllStudents: RequestHandler = catchAsync(async (req, res) => {
+  const result = await StudentServices.getAllStudentsFromDB();
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    massage: 'Student are retrieved success fully',
+    data: result,
+  });
+});
+
 const deleteStudent = catchAsync(async (req, res) => {
   const { studentId } = req.params;
-  const result = await studentServices.deleteStudentFromDB(studentId);
+  const result = await StudentServices.deleteStudentFromDB(studentId);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    massage: 'Student is created successfully',
+    massage: 'Student is deleted success fully',
     data: result,
   });
 });
 
-export const studentController = {
+export const StudentControllers = {
   getAllStudents,
   getSingleStudent,
   deleteStudent,
