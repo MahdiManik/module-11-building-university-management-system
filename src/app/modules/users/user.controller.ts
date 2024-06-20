@@ -3,6 +3,19 @@ import catchAsync from '../../config/utils/catchAsync';
 import { UserServices } from './user.service';
 import sendResponse from '../../config/utils/sendResponse';
 
+// const createStudent = catchAsync(async (req, res) => {
+//   const { password, student: studentData } = req.body;
+
+//   const result = await UserServices.createStudentIntoDB(password, studentData);
+
+//   sendResponse(res, {
+//     statusCode: httpStatus.OK,
+//     success: true,
+//     message: 'Student is created successfully',
+//     data: result,
+//   });
+// });
+
 const createStudent = catchAsync(async (req, res) => {
   const { password, student: studentData } = req.body;
 
@@ -11,7 +24,7 @@ const createStudent = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Student is created success fully',
+    message: 'Student is created successfully',
     data: result,
   });
 });
